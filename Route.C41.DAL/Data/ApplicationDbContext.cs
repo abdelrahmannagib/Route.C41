@@ -11,15 +11,15 @@ namespace Route.C41.DAL.Data
 {
 	public class ApplicationDbContext: DbContext
 	{
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(/*new DbContextOptions<ApplicationDbContext>()*/)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
 		{
 
 		}
-		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		//{
-		//	optionsBuilder.UseSqlServer();
-		//}
-		
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.UseSqlServer();
+		}
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
