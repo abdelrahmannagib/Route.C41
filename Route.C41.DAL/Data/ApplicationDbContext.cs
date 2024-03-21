@@ -9,12 +9,17 @@ using System.Threading.Tasks;
 
 namespace Route.C41.DAL.Data
 {
-	internal class ApplicationDbContext: DbContext
+	public class ApplicationDbContext: DbContext
 	{
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(/*new DbContextOptions<ApplicationDbContext>()*/)
 		{
-			optionsBuilder.UseSqlServer("Server = localhost\\sqlexpress; Database = MVCS01; Trusted_Connection = True; TrustServerCertificate=true;");
+
 		}
+		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		//{
+		//	optionsBuilder.UseSqlServer();
+		//}
+		
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
