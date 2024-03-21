@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Route.C41.BLL.Interfaces;
 using Route.C41.DAL.Data;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace Route.C41.PL
 				);
 			//First Parm IS Dbcontextoptions
 			// Deafult Scoped if we want to change pass parms
-
+			services.AddScoped<IDepartmentRepositery>();
 
 			///services.AddScoped<ApplicationDbContext>();
 			///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
@@ -54,7 +55,7 @@ namespace Route.C41.PL
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
-			app.UseHttpsRedirection();
+			app.UseHttpsRedirection(); // Http >> Https
 			app.UseStaticFiles();
 
 			app.UseRouting();

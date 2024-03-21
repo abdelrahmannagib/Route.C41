@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Route.C41.BLL.Interfaces
 {
-	internal interface IDepartmentRepositery
+	public interface IDepartmentRepositery
 	{
 		IEnumerable<Department> GetAll();
 		Department Get(int id);
