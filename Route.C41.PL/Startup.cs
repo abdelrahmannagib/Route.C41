@@ -20,15 +20,16 @@ namespace Route.C41.PL
 			Configuration = configuration;
 		}
 
-		public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; } //Conncetion String 
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
 			services.AddDbContext<ApplicationDbContext>(
-				options=>
-				options.UseSqlServer("Server = localhost\\sqlexpress; Database = MVCS01; Trusted_Connection = True; TrustServerCertificate=true;")
+				options =>
+				//options.UseSqlServer("Server = localhost\\sqlexpress; Database = MVCS01; Trusted_Connection = True; TrustServerCertificate=true;")
+				options.UseSqlServer(Configuration.GetConnectionString("DeafultConnection"))
 				);
 			//First Parm IS Dbcontextoptions
 			// Deafult Scoped if we want to change pass parms
