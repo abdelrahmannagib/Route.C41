@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Route.C41.BLL.Interfaces;
+using Route.C41.DAL.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +21,25 @@ namespace Route.C41.PL
 			Configuration = configuration;
 		}
 
-		public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; } //Conncetion String 
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
+			services.AddDbContext<ApplicationDbContext>(
+				options =>
+				//options.UseSqlServer("Server = localhost\\sqlexpress; Database = MVCS01; Trusted_Connection = True; TrustServerCertificate=true;")
+				options.UseSqlServer(Configuration.GetConnectionString("DeafultConnection"))
+				);
+			//First Parm IS Dbcontextoptions
+			// Deafult Scoped if we want to change pass parms
+			services.AddScoped<IDepartmentRepositery>();
+
+			///services.AddScoped<ApplicationDbContext>();
+			///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
+			/// AddSingelton(One per all) AddTransient(Each request open connection)
+		
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,7 +55,7 @@ namespace Route.C41.PL
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
-			app.UseHttpsRedirection();
+			app.UseHttpsRedirection(); // Http >> Https
 			app.UseStaticFiles();
 
 			app.UseRouting();
