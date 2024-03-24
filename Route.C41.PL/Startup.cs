@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Route.C41.BLL.Interfaces;
+using Route.C41.BLL.Reopsitories;
 using Route.C41.DAL.Data;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Route.C41.PL
 				);
 			//First Parm IS Dbcontextoptions
 			// Deafult Scoped if we want to change pass parms
-			services.AddScoped<IDepartmentRepositery>();
+			services.AddScoped<IDepartmentRepositery, DepartmentRepository>();
 
 			///services.AddScoped<ApplicationDbContext>();
 			///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
