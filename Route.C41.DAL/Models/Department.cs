@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Route.C41.DAL.Models
 {
-	public class Department
+	public class Department :ModelBase
 	{
-		public int ID { get; set; }
+		//public int ID { get; set; }
 		//[Required]
 		public string Code { get; set; }
 		public string Name { get; set; }
