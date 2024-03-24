@@ -35,7 +35,7 @@ namespace Route.C41.PL
 				);
 			//First Parm IS Dbcontextoptions
 			// Deafult Scoped if we want to change pass parms
-			services.AddScoped<IDepartmentRepositery, DepartmentRepository>();
+			services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
 			///services.AddScoped<ApplicationDbContext>();
 			///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
