@@ -36,7 +36,7 @@ namespace Route.C41.PL
 			//First Parm IS Dbcontextoptions
 			// Deafult Scoped if we want to change pass parms
 			services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-
+			services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 			///services.AddScoped<ApplicationDbContext>();
 			///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
 			/// AddSingelton(One per all) AddTransient(Each request open connection)

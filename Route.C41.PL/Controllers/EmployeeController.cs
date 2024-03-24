@@ -75,7 +75,6 @@ namespace Route.C41.PL.Controllers
             {
                 return View(Employee);
             }
-
             try
             {
                 _EmployeeRepository.Update(Employee);
