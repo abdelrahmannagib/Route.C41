@@ -64,6 +64,7 @@ namespace Route.C41.PL.Controllers
 		}
 		
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public IActionResult Edit([FromRoute]int id,Department department)//Id From Segment
 		{
 			if(id!=department.ID)
@@ -91,6 +92,18 @@ namespace Route.C41.PL.Controllers
 
 				return View(department);
             }
+		}
+		
+		public IActionResult Delete(int? id)
+		{
+			return Details(id, "Delete");
+		}
+
+		[HttpPost]
+		public IActionResult Delete(Department department)
+		{
+			_departmentRepository.Delete(department);
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }
