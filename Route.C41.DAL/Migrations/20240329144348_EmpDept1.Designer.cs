@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Route.C41.DAL.Data;
 
-namespace Route.C41.DAL.Data.Migrations
+namespace Route.C41.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240324063335_EmployeeModule")]
-    partial class EmployeeModule
+    [Migration("20240329144348_EmpDept1")]
+    partial class EmpDept1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace Route.C41.DAL.Data.Migrations
 
             modelBuilder.Entity("Route.C41.DAL.Models.Department", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:IdentityIncrement", 10)
@@ -41,7 +41,7 @@ namespace Route.C41.DAL.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Departments");
                 });
@@ -49,9 +49,7 @@ namespace Route.C41.DAL.Data.Migrations
             modelBuilder.Entity("Route.C41.DAL.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -62,6 +60,9 @@ namespace Route.C41.DAL.Data.Migrations
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartmentID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -96,6 +97,22 @@ namespace Route.C41.DAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Route.C41.DAL.Models.Employee", b =>
+                {
+                    b.HasOne("Route.C41.DAL.Models.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Route.C41.DAL.Models.Department", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }
