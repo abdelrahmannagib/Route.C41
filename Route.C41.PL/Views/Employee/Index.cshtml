@@ -4,6 +4,10 @@
     ViewData["Title"] = "Index";
     
 }
+<div class="alert alert-warning">
+    @ViewData["Message"]
+</div>
+
 <br/>
 <h1>All Employees</h1>
 <a asp-controller="Employee" asp-action="Create" class="btn btn-primary">Create New Employee</a>

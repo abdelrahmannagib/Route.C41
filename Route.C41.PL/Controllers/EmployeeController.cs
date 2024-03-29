@@ -21,7 +21,7 @@ namespace Route.C41.PL.Controllers
         }
         public IActionResult Index()
         {
-
+            ViewData["Message"]= "Hi ViewData";
             return View(_EmployeeRepository.GetAll());
         }
         [HttpGet]
