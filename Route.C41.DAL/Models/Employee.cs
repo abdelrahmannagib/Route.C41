@@ -54,7 +54,9 @@ namespace Route.C41.DAL.Models
 
         public bool IsDeleted { get; set; } = false;
 
+        public Department Department { get; set; }
 
+        public int? DepartmentID { get; set; }
 
     }
 }

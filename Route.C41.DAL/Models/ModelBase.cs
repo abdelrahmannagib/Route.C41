@@ -8,6 +8,6 @@ namespace Route.C41.DAL.Models
 {
     public class ModelBase
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
     }
 }

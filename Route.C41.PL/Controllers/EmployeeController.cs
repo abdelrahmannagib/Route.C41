@@ -76,7 +76,7 @@ namespace Route.C41.PL.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, Employee Employee)//Id From Segment
         {
-            if (id != Employee.ID)
+            if (id != Employee.Id)
                 return BadRequest();
 
             if (!ModelState.IsValid)
