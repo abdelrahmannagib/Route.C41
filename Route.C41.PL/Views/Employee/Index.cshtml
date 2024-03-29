@@ -2,11 +2,18 @@
 
 @{
     ViewData["Title"] = "Index";
-    
+
 }
-<div class="alert alert-warning">
+@* <div class="alert alert-warning">
     @ViewData["Message"]
+</div> *@
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="alert alert-primary">
+        @TempData["Message"]
 </div>
+}
+
 
 <br/>
 <h1>All Employees</h1>

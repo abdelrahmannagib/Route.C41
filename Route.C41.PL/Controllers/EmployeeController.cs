@@ -21,6 +21,7 @@ namespace Route.C41.PL.Controllers
         }
         public IActionResult Index()
         {
+            TempData.Keep();
             ViewData["Message"]= "Hi ViewData";
             return View(_EmployeeRepository.GetAll());
         }
@@ -37,7 +38,14 @@ namespace Route.C41.PL.Controllers
                 var count = _EmployeeRepository.Add(Employee);
                 if (count > 0)
                 {
+                    TempData["Message"] = "Created";
                     return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Message"] = "Error";
+                    return RedirectToAction(nameof(Index));
+
                 }
             }
             return View(Employee);
