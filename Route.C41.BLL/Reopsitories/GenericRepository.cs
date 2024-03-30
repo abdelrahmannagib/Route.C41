@@ -49,9 +49,9 @@ namespace Route.C41.BLL.Reopsitories
 
         public IEnumerable<T> GetAll()
         {
-            if (typeof(T) == typeof(Empolyee))
+            if (typeof(T) == typeof(Employee))
             {
-                return (IEnumerable<T>)_dbContext.Empolyees.Include(E => E.Department).AsNoTracking().ToList();
+                return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
             }
             else
             {
