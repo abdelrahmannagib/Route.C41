@@ -22,8 +22,8 @@ namespace Route.C41.BLL
 		public UnitOfWork(ApplicationDbContext dbContext)
 		{
 			_dbContext = dbContext;
-			EmployeeRepository =  new EmployeeRepository(_dbContext);
-			DepartmentRepository = new DepartmentRepository(_dbContext);
+			//EmployeeRepository =  new EmployeeRepository(_dbContext);
+			//DepartmentRepository = new DepartmentRepository(_dbContext);
 			_repostories = new Hashtable();
 		}
 
