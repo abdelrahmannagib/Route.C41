@@ -16,8 +16,6 @@ namespace Route.C41.PL.Controllers
         {
             _EmployeeRepository = EmployeeRepository;
             _env = env;
-            
-
         }
         public IActionResult Index()
         {
