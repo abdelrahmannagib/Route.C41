@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Route.C41.BLL;
 using Route.C41.BLL.Interfaces;
+using Route.C41.BLL.Reopsitories;
 using Route.C41.DAL.Models;
 using Route.C41.PL.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Route.C41.PL.Controllers
@@ -15,29 +18,49 @@ namespace Route.C41.PL.Controllers
         private readonly IEmployeeRepository _EmployeeRepository;
         private readonly IWebHostEnvironment _env;
 		private readonly IMapper _mapper;
+		private readonly IUnitOFWork _unitOfWork;
 
-		public EmployeeController(IEmployeeRepository EmployeeRepository, IWebHostEnvironment env,IMapper mapper)
+		public EmployeeController( IWebHostEnvironment env,IMapper mapper
+
+		  ,IUnitOFWork unitOfWork)
         {
-            _EmployeeRepository = EmployeeRepository;
+          //  _EmployeeRepository = EmployeeRepository;
             _env = env;
 			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
         public IActionResult Index(string searchInp)
         {
-            // TempData.Keep();
-            // ViewData["Message"]= "Hi ViewData";
-            var employees = Enumerable.Empty<Employee>();
-            if (string.IsNullOrEmpty(searchInp))
-            {
-                employees= _EmployeeRepository.GetAll();
-            }
-            else
-            {
-                employees= _EmployeeRepository.SearchByName(searchInp.ToLower());
 
-            }
-            return View(employees);
-        }
+			#region comm
+			//// TempData.Keep();
+			//// ViewData["Message"]= "Hi ViewData";
+			//var employees = Enumerable.Empty<Employee>();
+			//if (string.IsNullOrEmpty(searchInp))
+			//{
+			//    employees = _EmployeeRepository.GetAll();
+			//}
+			//else
+			//{
+			//    employees = _EmployeeRepository.SearchByName(searchInp.ToLower());
+
+			//}
+			//return View(employees); 
+			#endregion
+
+			var empolyees = Enumerable.Empty<Employee>();
+			var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
+			if (string.IsNullOrEmpty(searchInp))
+				empolyees = employeeRepo.GetAll();
+
+
+			else
+				empolyees = employeeRepo.SearchByName(searchInp.ToLower());
+
+			var MappedEmps = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(empolyees);
+
+			return View(MappedEmps);
+		}
         [HttpGet]
         public IActionResult Create()
         {
@@ -46,34 +69,39 @@ namespace Route.C41.PL.Controllers
         [HttpPost]
         public IActionResult Create(EmployeeViewModel Employee)
         {
-            ///if (ModelState.IsValid)//True if all validiation done Server side 
-            ///{
-            ///    var count = _EmployeeRepository.Add(Employee);
-            ///    if (count > 0)
-            ///    {
-            ///        TempData["Message"] = "Created";
-            ///        return RedirectToAction(nameof(Index));
-            ///    }
-            ///    else
-            ///    {
-            ///        TempData["Message"] = "Error";
-            ///        return RedirectToAction(nameof(Index));
-            ///    }
-            ///}
-            ///return View(Employee);
+			///if (ModelState.IsValid)//True if all validiation done Server side 
+			///{
+			///    var count = _EmployeeRepository.Add(Employee);
+			///    if (count > 0)
+			///    {
+			///        TempData["Message"] = "Created";
+			///        return RedirectToAction(nameof(Index));
+			///    }
+			///    else
+			///    {
+			///        TempData["Message"] = "Error";
+			///        return RedirectToAction(nameof(Index));
+			///    }
+			///}
+			///return View(Employee);
 
-            var mappedEmp=_mapper.Map<EmployeeViewModel,Employee>(Employee);
-			var count = _EmployeeRepository.Add(mappedEmp);
-			if (count > 0)
+			if (ModelState.IsValid) // Server Side Validation
 			{
-				TempData["Message"] = "Created";
-				return RedirectToAction(nameof(Index));
+
+
+				var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(Employee);
+
+
+				_unitOfWork.Repository<Employee>().Add(mappedEmp);
+				var count = _unitOfWork.Complete();
+				if (count > 0)
+				{
+
+					return RedirectToAction("Index");
+				}
+
 			}
-			else
-			{
-				TempData["Message"] = "Error";
-				return RedirectToAction(nameof(Index));
-			}
+			return View(Employee);
 
 		}
         [HttpGet]
