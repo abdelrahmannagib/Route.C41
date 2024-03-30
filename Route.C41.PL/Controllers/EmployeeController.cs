@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.BLL.Interfaces;
 using Route.C41.DAL.Models;
 using System;
+using System.Linq;
 
 namespace Route.C41.PL.Controllers
 {
@@ -17,11 +18,21 @@ namespace Route.C41.PL.Controllers
             _EmployeeRepository = EmployeeRepository;
             _env = env;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchInp)
         {
-            TempData.Keep();
-            ViewData["Message"]= "Hi ViewData";
-            return View(_EmployeeRepository.GetAll());
+            // TempData.Keep();
+            // ViewData["Message"]= "Hi ViewData";
+            var employees = Enumerable.Empty<Employee>();
+            if (string.IsNullOrEmpty(searchInp))
+            {
+                employees= _EmployeeRepository.GetAll();
+            }
+            else
+            {
+                employees= _EmployeeRepository.SearchByName(searchInp.ToLower());
+
+            }
+            return View(employees);
         }
         [HttpGet]
         public IActionResult Create()
