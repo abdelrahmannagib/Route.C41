@@ -9,6 +9,7 @@ using Route.C41.BLL.Interfaces;
 using Route.C41.BLL.Reopsitories;
 using Route.C41.DAL.Data;
 using Route.C41.PL.Extensions;
+using Route.C41.PL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace Route.C41.PL
 				}
 				,ServiceLifetime.Scoped);
 			services.AddApplicationServices();// Extension method
+			services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
 			//First Parm IS Dbcontextoptions
 			// Deafult Scoped if we want to change pass parms
 			//services.AddScoped<IDepartmentRepository, DepartmentRepository>();

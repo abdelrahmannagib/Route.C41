@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Route.C41.BLL.Interfaces;
 using Route.C41.DAL.Models;
+using Route.C41.PL.ViewModels;
 using System;
 using System.Linq;
 
@@ -12,12 +14,14 @@ namespace Route.C41.PL.Controllers
     {
         private readonly IEmployeeRepository _EmployeeRepository;
         private readonly IWebHostEnvironment _env;
+		private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository EmployeeRepository, IWebHostEnvironment env)
+		public EmployeeController(IEmployeeRepository EmployeeRepository, IWebHostEnvironment env,IMapper mapper)
         {
             _EmployeeRepository = EmployeeRepository;
             _env = env;
-        }
+			_mapper = mapper;
+		}
         public IActionResult Index(string searchInp)
         {
             // TempData.Keep();
@@ -40,27 +44,38 @@ namespace Route.C41.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Employee Employee)
+        public IActionResult Create(EmployeeViewModel Employee)
         {
-            if (ModelState.IsValid)//True if all validiation done Server side 
-            {
-                var count = _EmployeeRepository.Add(Employee);
-                if (count > 0)
-                {
-                    TempData["Message"] = "Created";
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    TempData["Message"] = "Error";
-                    return RedirectToAction(nameof(Index));
+            ///if (ModelState.IsValid)//True if all validiation done Server side 
+            ///{
+            ///    var count = _EmployeeRepository.Add(Employee);
+            ///    if (count > 0)
+            ///    {
+            ///        TempData["Message"] = "Created";
+            ///        return RedirectToAction(nameof(Index));
+            ///    }
+            ///    else
+            ///    {
+            ///        TempData["Message"] = "Error";
+            ///        return RedirectToAction(nameof(Index));
+            ///    }
+            ///}
+            ///return View(Employee);
 
-                }
-            }
-            return View(Employee);
+            var mappedEmp=_mapper.Map<EmployeeViewModel,Employee>(Employee);
+			var count = _EmployeeRepository.Add(mappedEmp);
+			if (count > 0)
+			{
+				TempData["Message"] = "Created";
+				return RedirectToAction(nameof(Index));
+			}
+			else
+			{
+				TempData["Message"] = "Error";
+				return RedirectToAction(nameof(Index));
+			}
 
-
-        }
+		}
         [HttpGet]
         public IActionResult Details(int? id, string viewName = "Details")
         {
@@ -83,18 +98,20 @@ namespace Route.C41.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee Employee)//Id From Segment
+        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVM)//Id From Segment
         {
-            if (id != Employee.Id)
+			var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+
+			if (id != employeeVM.Id)
                 return BadRequest();
 
             if (!ModelState.IsValid)
             {
-                return View(Employee);
+                return View(employeeVM);
             }
             try
             {
-                _EmployeeRepository.Update(Employee);
+				_EmployeeRepository.Update(mappedEmp);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -107,7 +124,7 @@ namespace Route.C41.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "Error Occured During Yacta :(");
 
-                return View(Employee);
+                return View(employeeVM);
             }
         }
 
