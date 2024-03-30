@@ -13,10 +13,14 @@ namespace Route.C41.DAL.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Department> builder)
 		{
-			builder.Property(nameof(Department.ID)).UseIdentityColumn(10,10);
+			builder.Property(nameof(Department.Id)).UseIdentityColumn(10,10);
 			builder.Property(nameof(Department.Code)).HasColumnType("varchar").HasMaxLength(50);
 			builder.Property(nameof(Department.Name)).HasColumnType("varchar").HasMaxLength(50);
 
+			builder.HasMany(d => d.Employees)
+				.WithOne(d => d.Department)
+				.HasForeignKey(d => d.Id)
+				.OnDelete(DeleteBehavior.Cascade);
 
 		}
 	}

@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.BLL.Interfaces;
 using Route.C41.BLL.Reopsitories;
 using Route.C41.DAL.Data;
+using Route.C41.PL.Extensions;
+using Route.C41.PL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +33,17 @@ namespace Route.C41.PL
 			services.AddDbContext<ApplicationDbContext>(
 				options =>
 				//options.UseSqlServer("Server = localhost\\sqlexpress; Database = MVCS01; Trusted_Connection = True; TrustServerCertificate=true;")
-				options.UseSqlServer(Configuration.GetConnectionString("DeafultConnection"))
-				);
+				{
+					options.UseSqlServer(Configuration.GetConnectionString("DeafultConnection"));
+
+				}
+				,ServiceLifetime.Scoped);
+			services.AddApplicationServices();// Extension method
+			services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
 			//First Parm IS Dbcontextoptions
 			// Deafult Scoped if we want to change pass parms
-			services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-			services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+			//services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+			//services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 			///services.AddScoped<ApplicationDbContext>();
 			///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
 			/// AddSingelton(One per all) AddTransient(Each request open connection)

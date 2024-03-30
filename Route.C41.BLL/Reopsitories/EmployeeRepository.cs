@@ -20,5 +20,10 @@ namespace Route.C41.BLL.Reopsitories
         {
             return _dbContext.Employees.Where(E=>E.Address.ToLower() == address.ToLower());
         }
+
+        public IQueryable<Employee> SearchByName(string Name)
+        {
+           return _dbContext.Employees.Where(e=>e.Name.ToLower().Contains(Name));
+        }
     }
 }
