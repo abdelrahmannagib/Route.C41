@@ -49,5 +49,6 @@ namespace Route.C41.PL.ViewModels
 
         public IFormFile Image { get; set; }
         public string ImageName { get; set; }
+       // public IFormFile Image { get; set; }
     }
 }
