@@ -53,18 +53,20 @@ namespace Route.C41.BLL
 			}
 			return _repostories[key] as IGenericRepository<T>;
 		}
+		 
 
-
-		public int Complete()
+		public async Task<int> Complete()
 		{
 
-			return _dbContext.SaveChanges();
+			return await _dbContext.SaveChangesAsync();
 
 		}
 
-		public void Dispose()
-		{
-			_dbContext.Dispose();
-		}
-	}
+
+
+        public async ValueTask DisposeAsync()
+        {
+            await _dbContext.DisposeAsync();
+        }
+    }
 }

@@ -38,16 +38,16 @@ namespace Route.C41.BLL.Reopsitories
             return _dbContext.SaveChanges();
         }
 
-        public T Get(int id)
+        public async Task<T> GetAsync(int id)
         {
             //throw new NotImplementedException();
             //var dept= _dbContext.Departments.Where(d=>d.ID==id).FirstOrDefault();
             //return _dbContext.Departments.Find(id);
-            return _dbContext.Find<T>(id);
+            return await _dbContext.FindAsync<T>(id);
             //return dept;
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAllAsync()
         {
             if (typeof(T) == typeof(Employee))
             {

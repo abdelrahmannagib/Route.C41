@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.BLL.Interfaces;
 using Route.C41.BLL.Reopsitories;
 using Route.C41.DAL.Data;
+using Route.C41.DAL.Models;
 using Route.C41.PL.Extensions;
 using Route.C41.PL.Helpers;
 using System;
@@ -40,15 +42,18 @@ namespace Route.C41.PL
 				,ServiceLifetime.Scoped);
 			services.AddApplicationServices();// Extension method
 			services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
-			//First Parm IS Dbcontextoptions
-			// Deafult Scoped if we want to change pass parms
-			//services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-			//services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-			///services.AddScoped<ApplicationDbContext>();
-			///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
-			/// AddSingelton(One per all) AddTransient(Each request open connection)
-		
+			services.AddApplicationServices();
+			services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 		}
+		//First Parm IS Dbcontextoptions
+		// Deafult Scoped if we want to change pass parms
+		//services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+		//services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+		///services.AddScoped<ApplicationDbContext>();
+		///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
+		/// AddSingelton(One per all) AddTransient(Each request open connection)
+
+	}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,6 +1,7 @@
 ﻿using Route.C41.DAL.Models;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Route.C41.PL.ViewModels
 {
@@ -44,6 +45,10 @@ namespace Route.C41.PL.ViewModels
         public int? DepartmentId { get; set; } // Foreign Key
 
         // Navigational Property
-        public virtual Department Department { get; set; }
+        public Department Department { get; set; }
+
+        public IFormFile Image { get; set; }
+        public string ImageName { get; set; }
+       // public IFormFile Image { get; set; }
     }
 }
