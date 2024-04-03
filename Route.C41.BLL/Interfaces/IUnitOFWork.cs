@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Route.C41.BLL.Interfaces
 {
-	public interface IUnitOFWork:IDisposable
+	public interface IUnitOFWork:IAsyncDisposable
 	{
 
 		IGenericRepository<T> Repository<T>() where T : ModelBase;
 
-		int Complete();
+		Task<int> Complete();
 	}
 }

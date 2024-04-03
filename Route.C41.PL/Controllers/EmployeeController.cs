@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace Route.C41.PL.Controllers
 {
@@ -31,7 +32,7 @@ namespace Route.C41.PL.Controllers
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
 		}
-        public IActionResult Index(string searchInp)
+        public async Task<IActionResult> Index(string searchInp)
         {
 
 			#region comm
@@ -53,7 +54,7 @@ namespace Route.C41.PL.Controllers
 			var empolyees = Enumerable.Empty<Employee>();
 			var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
 			if (string.IsNullOrEmpty(searchInp))
-				empolyees = employeeRepo.GetAll();
+				empolyees = employeeRepo.GetAllAsync();
 
 
 			else
@@ -61,7 +62,7 @@ namespace Route.C41.PL.Controllers
 
 			var MappedEmps = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(empolyees);
 
-			return View(MappedEmps);
+			return  View(MappedEmps);
 		}
         [HttpGet]
         public IActionResult Create()
@@ -69,7 +70,7 @@ namespace Route.C41.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel Employee)
+        public async Task<IActionResult> Create(EmployeeViewModel Employee)
         {
 			///if (ModelState.IsValid)//True if all validiation done Server side 
 			///{
@@ -96,7 +97,7 @@ namespace Route.C41.PL.Controllers
 
 
 				_unitOfWork.Repository<Employee>().Add(mappedEmp);
-				var count = _unitOfWork.Complete();
+				var count =await _unitOfWork.Complete();
 				if (count > 0)
 				{
 					return RedirectToAction("Index");
@@ -107,22 +108,23 @@ namespace Route.C41.PL.Controllers
 
 		}
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (id is null)
                 return BadRequest();
 
-            var Employee = _EmployeeRepository.Get(id.Value);
+            var Employee = await _EmployeeRepository.GetAsync(id.Value);
             if (Employee == null)
                 return NotFound();
 
+            TempData["ImageName"] = Employee.ImageName;
             return View(viewName, Employee);
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
             // return View(id);
         }
 
@@ -158,16 +160,38 @@ namespace Route.C41.PL.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
-        public IActionResult Delete(Employee Employee)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(EmployeeViewModel employeeVM)
         {
-            _EmployeeRepository.Delete(Employee);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                employeeVM.ImageName = TempData ["ImageName"]as string;
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+                _unitOfWork.Repository<Employee>().Delete(mappedEmp);
+
+                var count= await _unitOfWork.Complete();
+                if(count > 0)
+                {
+                    DocumentSettings.DeleteFile(employeeVM.ImageName, "images");
+                    return  RedirectToAction(nameof(Index));
+                }
+                return View(employeeVM);
+            }
+            catch (Exception ex)
+            {
+                if (_env.IsDevelopment())
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                else
+                    ModelState.AddModelError(string.Empty, ("An error has occured during update the employee"));
+                return View(employeeVM);
+            }
+
         }
     }
 }

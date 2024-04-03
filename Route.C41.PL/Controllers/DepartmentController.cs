@@ -21,7 +21,7 @@ namespace Route.C41.PL.Controllers
 		public IActionResult Index()
 		{
 
-			return View(_departmentRepository.GetAll());
+			return View(_departmentRepository.GetAllAsync());
 		}
 		[HttpGet]
 		public IActionResult Create()
@@ -49,7 +49,7 @@ namespace Route.C41.PL.Controllers
 			if (id is null)
 				return BadRequest();
 
-			var department = _departmentRepository.Get(id.Value);
+			var department = _departmentRepository.GetAsync(id.Value);
 			if (department == null)
 				return NotFound();
 
