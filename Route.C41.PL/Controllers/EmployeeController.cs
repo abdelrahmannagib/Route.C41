@@ -6,10 +6,12 @@ using Route.C41.BLL;
 using Route.C41.BLL.Interfaces;
 using Route.C41.BLL.Reopsitories;
 using Route.C41.DAL.Models;
+using Route.C41.PL.Helpers;
 using Route.C41.PL.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 
 namespace Route.C41.PL.Controllers
 {
@@ -88,6 +90,7 @@ namespace Route.C41.PL.Controllers
 			if (ModelState.IsValid) // Server Side Validation
 			{
 
+				Employee.ImageName=DocumentSettings.UploadFile(Employee.Image, "images");
 
 				var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(Employee);
 
@@ -96,7 +99,6 @@ namespace Route.C41.PL.Controllers
 				var count = _unitOfWork.Complete();
 				if (count > 0)
 				{
-
 					return RedirectToAction("Index");
 				}
 

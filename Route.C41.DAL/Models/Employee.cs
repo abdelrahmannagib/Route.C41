@@ -51,6 +51,8 @@ namespace Route.C41.DAL.Models
 
         public Department Department { get; set; }
 
+        public string ImageName { get; set; }
+
         public int? DepartmentID { get; set; }
 
     }
